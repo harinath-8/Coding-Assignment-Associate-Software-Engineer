@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+        }
+
+        .profile-card {
+            width: 320px;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .cover-photo {
+            height: 120px;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: -60px auto 0;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .designation {
+            font-size: 16px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .bio {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f3f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: #3498db;
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 480px) {
+            .profile-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <div class="cover-photo"></div>
+        <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="Profile Photo" class="profile-photo">
+        <div class="profile-info">
+            <h2 class="name">Sarah Johnson</h2>
+            <p class="designation">Software Developer</p>
+            <p class="bio">Passionate software developer with expertise in web technologies. Love building creative solutions and learning new technologies.</p>
+            <div class="social-icons">
+                <a href="#" class="social-icon">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="social-icon">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="social-icon">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-icon">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

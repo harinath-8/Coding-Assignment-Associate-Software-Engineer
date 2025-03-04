@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - To-Do List Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #3498db, #1abc9c);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .task-input {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .task-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        .task-input input:focus {
+            border-color: #3498db;
+        }
+        
+        .task-input button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .task-input button:hover {
+            background-color: #2980b9;
+        }
+        
+        .tasks-container {
+            padding: 20px;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .task-content {
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .task-actions button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .task-actions button:hover {
+            background-color: #c0392b;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .empty-message {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 480px) {
+            .task-input {
+                flex-direction: column;
+            }
+            
+            .task-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Task Manager</h1>
+            <p>Keep track of your daily tasks</p>
+        </div>
+        
+        <div class="task-input">
+            <input type="text" id="taskInput" placeholder="Add a new task...">
+            <button id="addTaskBtn">Add Task</button>
+        </div>
+        
+        <div class="tasks-container">
+            <ul id="taskList" class="task-list">
+                <!-- Tasks will be added here dynamically -->
+            </ul>
+            <div id="emptyMessage" class="empty-message">No tasks yet. Add a task to get started!</div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const taskInput = document.getElementById('taskInput');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskList = document.getElementById('taskList');
+        const emptyMessage = document.getElementById('emptyMessage');
+        
+        // Task counter to generate unique IDs
+        let taskCounter = 0;
+        
+        // Array to store tasks
+        let tasks = [];
+        
+        // Initialize the app
+        function init() {
+            // Load tasks from local storage if available
+            loadTasks();
+            
+            // Add event listeners
+            addTaskBtn.addEventListener('click', addTask);
+            taskInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+            
+            // Initial UI update
+            updateUI();
+        }
+        
+        // Add a new task
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            
+            if (taskText !== '') {
+                // Create new task object
+                const task = {
+                    id: ++taskCounter,
+                    text: taskText,
+                    completed: false,
+                    createdAt: new Date()
+                };
+                
+                // Add to tasks array
+                tasks.push(task);
+                
+                // Clear input
+                taskInput.value = '';
+                
+                // Focus back on input
+                taskInput.focus();
+                
+                // Save and update UI
+                saveTasks();
+                updateUI();
+            }
+        }
+        
+        // Remove a task
+        function removeTask(taskId) {
+            // Filter out the task to remove
+            tasks = tasks.filter(task => task.id !== taskId);
+            
+            // Save and update UI
+            saveTasks();
+            updateUI();
+        }
+        
+        // Toggle task completion
+        function toggleTaskCompletion(taskId) {
+            // Find the task and toggle its completed status
+            tasks = tasks.map(task => {
+                if (task.id === taskId) {
+                    return { ...task, completed: !task.completed };
+                }
+                return task;
+            });
+            
+            // Save and update UI
+            saveTasks();
+            updateUI();
+        }
+        
+        // Update the UI based on tasks
+        function updateUI() {
+            // Clear current list
+            taskList.innerHTML = '';
+            
+            // Show/hide empty message
+            if (tasks.length === 0) {
+                emptyMessage.style.display = 'block';
+            } else {
+                emptyMessage.style.display = 'none';
+                
+                // Add each task to the list
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.className = 'task-item';
+                    
+                    const taskContent = document.createElement('span');
+                    taskContent.className = `task-content ${task.completed ? 'completed' : ''}`;
+                    taskContent.textContent = task.text;
+                    
+                    const taskActions = document.createElement('div');
+                    taskActions.className = 'task-actions';
+                    
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.textContent = task.completed ? 'Undo' : 'Complete';
+                    toggleBtn.style.backgroundColor = task.completed ? '#f39c12' : '#2ecc71';
+                    toggleBtn.addEventListener('click', () => toggleTaskCompletion(task.id));
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.addEventListener('click', () => removeTask(task.id));
+                    
+                    taskActions.appendChild(toggleBtn);
+                    taskActions.appendChild(deleteBtn);
+                    
+                    li.appendChild(taskContent);
+                    li.appendChild(taskActions);
+                    
+                    taskList.appendChild(li);
+                });
+            }
+        }
+        
+        // Save tasks to local storage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('taskCounter', taskCounter);
+        }
+        
+        // Load tasks from local storage
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('tasks');
+            const savedCounter = localStorage.getItem('taskCounter');
+            
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+            }
+            
+            if (savedCounter) {
+                taskCounter = parseInt(savedCounter);
+            }
+        }
+        
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

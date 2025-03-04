@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Image Slider</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .slider-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slider-header {
+            background: linear-gradient(45deg, #3498db, #9b59b6);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .slider-header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .slider-header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .slider {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .slider-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #bdc3c7;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        
+        .indicator.active {
+            background-color: #3498db;
+            transform: scale(1.2);
+        }
+        
+        @media (max-width: 768px) {
+            .slider {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider-header">
+            <h1>Image Gallery</h1>
+            <p>Navigate through beautiful images</p>
+        </div>
+        
+        <div class="slider" id="imageSlider">
+            <!-- Slides will be added dynamically -->
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="prevBtn">
+                <span>&#10094;</span> Previous
+            </button>
+            <button class="btn" id="nextBtn">
+                Next <span>&#10095;</span>
+            </button>
+        </div>
+        
+        <div class="indicators" id="indicators">
+            <!-- Indicators will be added dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const slider = document.getElementById('imageSlider');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicators = document.getElementById('indicators');
+        
+        // Image URLs array
+        const images = [
+            {
+                url: 'https://source.unsplash.com/featured/800x450?nature',
+                caption: 'Beautiful Nature Landscape'
+            },
+            {
+                url: 'https://source.unsplash.com/featured/800x450?city',
+                caption: 'Urban City Skyline'
+            },
+            {
+                url: 'https://source.unsplash.com/featured/800x450?beach',
+                caption: 'Serene Beach
